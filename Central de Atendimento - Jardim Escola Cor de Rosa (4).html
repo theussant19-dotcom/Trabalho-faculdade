@@ -1,0 +1,1331 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jardim Escola Cor de Rosa - Portal de Atendimento e Informações Oficiais</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Outfit:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        rosa: {
+                            50: '#fff1f5',
+                            100: '#ffe4ec',
+                            200: '#fecddc',
+                            300: '#fda4af',
+                            400: '#fb7185',
+                            500: '#f43f5e',
+                            600: '#e11d48',
+                            700: '#be123c',
+                        },
+                        suave: {
+                            bg: '#fffafd',
+                            card: '#ffffff',
+                            lilac: '#f3e8ff',
+                            mint: '#e6fffa',
+                            yellow: '#fef9c3',
+                            blue: '#e0f2fe'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        heading: ['Outfit', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #fffafd;
+            color: #334155;
+        }
+        .bg-pattern {
+            background-image: radial-gradient(#fda4af 0.85px, transparent 0.85px), radial-gradient(#fda4af 0.85px, #fffafd 0.85px);
+            background-size: 32px 32px;
+            background-position: 0 0, 16px 16px;
+            background-opacity: 0.12;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(253, 164, 175, 0.28);
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #ffe4ec;
+            border-radius: 10px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #fb7185;
+            border-radius: 10px;
+        }
+        .chat-bubble-shadow {
+            box-shadow: 0 15px 35px -5px rgba(244, 63, 94, 0.22);
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in {
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+    </style>
+</head>
+<body class="bg-pattern min-h-screen flex flex-col justify-between antialiased selection:bg-rosa-200 selection:text-rosa-700">
+
+    <div id="app" class="flex-grow flex flex-col">
+        <!-- Header / Navbar -->
+        <header class="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-rosa-100 shadow-sm">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex justify-between items-center h-20">
+                    
+                    <!-- Logo / Brand -->
+                    <div class="flex items-center space-x-3 cursor-pointer" @click="activeTab = 'home'">
+                        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-rosa-500 to-rosa-300 flex items-center justify-center text-white shadow-lg shadow-rosa-200 transform transition hover:scale-105">
+                            <i class="fa-solid fa-child-reaching text-2xl"></i>
+                        </div>
+                        <div>
+                            <span class="font-heading font-black text-xl sm:text-2xl tracking-tight text-slate-800 block leading-none">
+                                Cor de Rosa
+                            </span>
+                            <span class="text-xs font-bold text-rosa-500 uppercase tracking-widest block mt-1">
+                                Jardim Escola Infantojuvenil
+                            </span>
+                        </div>
+                    </div>
+
+                    <!-- Desktop Navigation Links -->
+                    <nav class="hidden lg:flex items-center space-x-1">
+                        <button @click="activeTab = 'home'" :class="{'bg-rosa-50 text-rosa-600 font-bold': activeTab === 'home', 'text-slate-600 hover:text-rosa-500 hover:bg-rosa-50/50': activeTab !== 'home'}" class="px-3.5 py-2 rounded-xl text-sm font-semibold transition-all">
+                            <i class="fa-solid fa-house mr-1.5 text-rosa-400"></i>Início
+                        </button>
+                        <button @click="activeTab = 'faq'" :class="{'bg-rosa-50 text-rosa-600 font-bold': activeTab === 'faq', 'text-slate-600 hover:text-rosa-500 hover:bg-rosa-50/50': activeTab !== 'faq'}" class="px-3.5 py-2 rounded-xl text-sm font-semibold transition-all">
+                            <i class="fa-solid fa-circle-question mr-1.5 text-rosa-400"></i>Tira-Dúvidas
+                        </button>
+                        <button @click="activeTab = 'calculadora'" :class="{'bg-rosa-50 text-rosa-600 font-bold': activeTab === 'calculadora', 'text-slate-600 hover:text-rosa-500 hover:bg-rosa-50/50': activeTab !== 'calculadora'}" class="px-3.5 py-2 rounded-xl text-sm font-semibold transition-all">
+                            <i class="fa-solid fa-calculator mr-1.5 text-rosa-400"></i>Mensalidades & Descontos
+                        </button>
+                        <button @click="activeTab = 'materiais'" :class="{'bg-rosa-50 text-rosa-600 font-bold': activeTab === 'materiais', 'text-slate-600 hover:text-rosa-500 hover:bg-rosa-50/50': activeTab !== 'materiais'}" class="px-3.5 py-2 rounded-xl text-sm font-semibold transition-all">
+                            <i class="fa-solid fa-boxes-packing mr-1.5 text-rosa-400"></i>Livros, Material & Uniforme
+                        </button>
+                        <button @click="activeTab = 'visita'" :class="{'bg-rosa-50 text-rosa-600 font-bold': activeTab === 'visita', 'text-slate-600 hover:text-rosa-500 hover:bg-rosa-50/50': activeTab !== 'visita'}" class="px-3.5 py-2 rounded-xl text-sm font-semibold transition-all">
+                            <i class="fa-solid fa-calendar-days mr-1.5 text-rosa-400"></i>Agendar Visita
+                        </button>
+                    </nav>
+
+                    <!-- Quick Action Button -->
+                    <div class="hidden sm:flex items-center space-x-3">
+                        <a href="https://wa.me/5521999999999?text=Olá!%20Gostaria%20de%20falar%20com%20a%20Secretaria%20do%20Jardim%20Escola%20Cor%20de%20Rosa." target="_blank" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-4 py-2.5 rounded-xl text-sm shadow-md shadow-emerald-100 flex items-center transition transform hover:-translate-y-0.5">
+                            <i class="fa-brands fa-whatsapp text-lg mr-2"></i>WhatsApp Secretaria
+                        </a>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <div class="flex lg:hidden">
+                        <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-slate-600 hover:text-rosa-500 p-2 rounded-xl focus:outline-none">
+                            <i class="fa-solid text-2xl" :class="mobileMenuOpen ? 'fa-xmark' : 'fa-bars'"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation Drawer -->
+            <div v-if="mobileMenuOpen" class="lg:hidden border-t border-rosa-100 bg-white px-4 pt-3 pb-6 space-y-2 shadow-xl animate-fade-in">
+                <button @click="activeTab = 'home'; mobileMenuOpen = false" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center text-slate-700 hover:bg-rosa-50">
+                    <i class="fa-solid fa-house text-rosa-400 w-8"></i>Início
+                </button>
+                <button @click="activeTab = 'faq'; mobileMenuOpen = false" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center text-slate-700 hover:bg-rosa-50">
+                    <i class="fa-solid fa-circle-question text-rosa-400 w-8"></i>Tira-Dúvidas Frequentes
+                </button>
+                <button @click="activeTab = 'calculadora'; mobileMenuOpen = false" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center text-slate-700 hover:bg-rosa-50">
+                    <i class="fa-solid fa-calculator text-rosa-400 w-8"></i>Simular Mensalidade & Descontos
+                </button>
+                <button @click="activeTab = 'materiais'; mobileMenuOpen = false" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center text-slate-700 hover:bg-rosa-50">
+                    <i class="fa-solid fa-boxes-packing text-rosa-400 w-8"></i>Livros FTD, Material & Uniforme
+                </button>
+                <button @click="activeTab = 'visita'; mobileMenuOpen = false" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center text-slate-700 hover:bg-rosa-50">
+                    <i class="fa-solid fa-calendar-days text-rosa-400 w-8"></i>Agendar Visita Guiada
+                </button>
+                <button @click="openContactModal(); mobileMenuOpen = false" class="w-full text-left px-4 py-3 rounded-xl font-bold flex items-center text-slate-700 hover:bg-rosa-50">
+                    <i class="fa-solid fa-paper-plane text-rosa-400 w-8"></i>Falar com a Secretaria
+                </button>
+                <div class="pt-2">
+                    <a href="https://wa.me/5521999999999" target="_blank" class="w-full bg-emerald-500 text-white font-bold py-3 rounded-xl flex items-center justify-center shadow-md">
+                        <i class="fa-brands fa-whatsapp text-xl mr-2"></i> Atendimento via WhatsApp
+                    </a>
+                </div>
+            </div>
+        </header>
+
+        <main class="flex-grow">
+            <!-- HERO & INSTANT SEARCH SECTION -->
+            <section class="relative pt-8 pb-10 md:pt-12 md:pb-14 overflow-hidden">
+                <div class="max-w-5xl mx-auto px-4 sm:px-6 text-center relative z-10">
+                    
+                    <!-- Top Badge -->
+                    <div class="inline-flex items-center space-x-2 bg-rosa-100/90 border border-rosa-200 px-4 py-1.5 rounded-full text-rosa-700 text-xs sm:text-sm font-black mb-6 shadow-xs">
+                        <span class="flex h-2 w-2 rounded-full bg-rosa-500 animate-ping"></span>
+                        <span>Central Oficial de Informações • Jardim Escola Cor de Rosa</span>
+                    </div>
+
+                    <h1 class="text-3xl sm:text-5xl lg:text-6xl font-heading font-black text-slate-800 tracking-tight leading-tight">
+                        Tudo sobre a escola do seu filho <br class="hidden sm:inline"><span class="text-transparent bg-clip-text bg-gradient-to-r from-rosa-500 via-rose-500 to-pink-500">em um só lugar</span>
+                    </h1>
+                    
+                    <p class="mt-4 text-base sm:text-lg text-slate-600 max-w-3xl mx-auto leading-relaxed font-medium">
+                        Respostas oficiais padronizadas sobre mensalidades, descontos, uniforme, livros didáticos FTD, taxa de material e agendamento de visitas.
+                    </p>
+
+                    <!-- Smart Search Input Box -->
+                    <div class="mt-8 max-w-2xl mx-auto relative">
+                        <div class="relative flex items-center">
+                            <input 
+                                type="text" 
+                                v-model="searchQuery"
+                                @focus="activeTab = 'faq'"
+                                placeholder="Digite sua dúvida (ex: mensalidade, FTD, R$ 180, R$ 350, visita)..." 
+                                class="w-full pl-12 pr-28 py-4 sm:py-4.5 rounded-2xl bg-white border-2 border-rosa-200 focus:border-rosa-500 focus:ring-4 focus:ring-rosa-100 text-slate-800 text-base sm:text-lg shadow-lg transition-all outline-none"
+                            >
+                            <i class="fa-solid fa-magnifying-glass absolute left-4 text-rosa-400 text-xl"></i>
+                            <button 
+                                v-if="searchQuery" 
+                                @click="searchQuery = ''" 
+                                class="absolute right-28 text-slate-400 hover:text-slate-600 p-1"
+                            >
+                                <i class="fa-solid fa-xmark text-lg"></i>
+                            </button>
+                            <button 
+                                @click="activeTab = 'faq'" 
+                                class="absolute right-2 sm:right-2.5 bg-rosa-500 hover:bg-rosa-600 text-white font-bold px-4 sm:px-6 py-2 sm:py-2.5 rounded-xl text-sm sm:text-base transition shadow-md"
+                            >
+                                Buscar
+                            </button>
+                        </div>
+
+                        <!-- Fast Topic Chips -->
+                        <div class="mt-4 flex flex-wrap justify-center gap-2 text-xs sm:text-sm">
+                            <span class="text-slate-500 font-bold self-center mr-1">Atalhos rápidos:</span>
+                            <button @click="searchQuery = 'Mensalidade'; activeTab = 'faq'" class="bg-white hover:bg-rosa-100 border border-rosa-200 text-rosa-700 px-3 py-1 rounded-full font-bold transition shadow-xs">
+                                💳 Mensalidade R$ 850
+                            </button>
+                            <button @click="searchQuery = 'FTD'; activeTab = 'faq'" class="bg-white hover:bg-rosa-100 border border-rosa-200 text-rosa-700 px-3 py-1 rounded-full font-bold transition shadow-xs">
+                                📚 Coleção Farol FTD
+                            </button>
+                            <button @click="searchQuery = 'Uniforme'; activeTab = 'faq'" class="bg-white hover:bg-rosa-100 border border-rosa-200 text-rosa-700 px-3 py-1 rounded-full font-bold transition shadow-xs">
+                                👕 Uniforme R$ 180
+                            </button>
+                            <button @click="searchQuery = 'Material'; activeTab = 'faq'" class="bg-white hover:bg-rosa-100 border border-rosa-200 text-rosa-700 px-3 py-1 rounded-full font-bold transition shadow-xs">
+                                📦 Taxa R$ 350
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- OFFICIAL HIGHLIGHTS CARDS -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-8">
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    
+                    <div class="bg-white rounded-2xl p-4.5 border border-rosa-100 shadow-xs flex items-start space-x-3.5 hover:shadow-md transition">
+                        <div class="w-10 h-10 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-coins text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Mensalidade & Pontualidade</h4>
+                            <p class="text-xs text-slate-600 mt-0.5">Turno parcial R$ 850,00 (Vencimento dia 05). <strong>5% de desconto</strong> para pagamentos em dia.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4.5 border border-rosa-100 shadow-xs flex items-start space-x-3.5 hover:shadow-md transition">
+                        <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-book-bookmark text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Livros FTD Coleção Farol</h4>
+                            <p class="text-xs text-slate-600 mt-0.5">Compra online no site da FTD com nosso <strong>cupom exclusivo</strong> e entrega na sua residência.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4.5 border border-rosa-100 shadow-xs flex items-start space-x-3.5 hover:shadow-md transition">
+                        <div class="w-10 h-10 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-shirt text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Kit Uniforme R$ 180,00</h4>
+                            <p class="text-xs text-slate-600 mt-0.5">Vendido na <em>Uniformes & Cia</em>. Mostruário de tamanhos disponível na secretaria escolar.</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-2xl p-4.5 border border-rosa-100 shadow-xs flex items-start space-x-3.5 hover:shadow-md transition">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center shrink-0">
+                            <i class="fa-solid fa-calendar-check text-lg"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-800 text-sm">Visita Guiada à Escola</h4>
+                            <p class="text-xs text-slate-600 mt-0.5">Visitas agendadas às <strong>terças e quintas (às 9h ou 14h)</strong> para atendimento personalizado.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+
+            <!-- MAIN CONTENT DISPLAY BASED ON TAB -->
+            <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+
+                <!-- TAB 1: HOME OVERVIEW / CATEGORIES -->
+                <div v-if="activeTab === 'home'" class="space-y-10">
+                    
+                    <!-- Quick Categories Grid -->
+                    <div>
+                        <div class="flex items-center justify-between mb-6">
+                            <div>
+                                <h2 class="text-2xl font-heading font-extrabold text-slate-800">Canais de Informação da Secretaria</h2>
+                                <p class="text-sm text-slate-500 font-medium">Selecione o assunto desejado para ver as respostas oficiais padronizadas</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                            
+                            <!-- Category 1 -->
+                            <div @click="selectCategory('mensalidades')" class="glass-card p-6 rounded-2xl hover:border-rosa-400 transition-all transform hover:-translate-y-1 cursor-pointer group shadow-xs hover:shadow-md">
+                                <div class="w-12 h-12 rounded-xl bg-pink-100 text-pink-600 flex items-center justify-center text-xl mb-4 group-hover:bg-rosa-500 group-hover:text-white transition-colors">
+                                    <i class="fa-solid fa-hand-holding-dollar"></i>
+                                </div>
+                                <h3 class="font-heading font-bold text-lg text-slate-800 mb-2 group-hover:text-rosa-600 transition">Mensalidades & Descontos</h3>
+                                <p class="text-sm text-slate-600 mb-4 leading-relaxed">Turno parcial por R$ 850,00, vencimento no dia 05, 5% de desconto de pontualidade e 10% para o 2º filho.</p>
+                                <span class="text-xs font-bold text-rosa-600 flex items-center">
+                                    Ver regras e descontos <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                                </span>
+                            </div>
+
+                            <!-- Category 2 -->
+                            <div @click="selectCategory('materiais')" class="glass-card p-6 rounded-2xl hover:border-rosa-400 transition-all transform hover:-translate-y-1 cursor-pointer group shadow-xs hover:shadow-md">
+                                <div class="w-12 h-12 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center text-xl mb-4 group-hover:bg-purple-500 group-hover:text-white transition-colors">
+                                    <i class="fa-solid fa-box-open"></i>
+                                </div>
+                                <h3 class="font-heading font-bold text-lg text-slate-800 mb-2 group-hover:text-rosa-600 transition">Taxa de Material Escolar</h3>
+                                <p class="text-sm text-slate-600 mb-4 leading-relaxed">Opção de Taxa Coletiva de R$ 350,00 (escola compra tudo) ou solicitação da lista completa em PDF.</p>
+                                <span class="text-xs font-bold text-rosa-600 flex items-center">
+                                    Conhecer as duas opções <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                                </span>
+                            </div>
+
+                            <!-- Category 3 -->
+                            <div @click="selectCategory('livros')" class="glass-card p-6 rounded-2xl hover:border-rosa-400 transition-all transform hover:-translate-y-1 cursor-pointer group shadow-xs hover:shadow-md">
+                                <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl mb-4 group-hover:bg-blue-500 group-hover:text-white transition-colors">
+                                    <i class="fa-solid fa-book-open-reader"></i>
+                                </div>
+                                <h3 class="font-heading font-bold text-lg text-slate-800 mb-2 group-hover:text-rosa-600 transition">Livros Didáticos FTD</h3>
+                                <p class="text-sm text-slate-600 mb-4 leading-relaxed">Coleção Farol da Editora FTD. Compra online no site da FTD com nosso cupom de desconto e suporte da secretaria.</p>
+                                <span class="text-xs font-bold text-rosa-600 flex items-center">
+                                    Passo a passo de compra <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                                </span>
+                            </div>
+
+                            <!-- Category 4 -->
+                            <div @click="selectCategory('uniformes')" class="glass-card p-6 rounded-2xl hover:border-rosa-400 transition-all transform hover:-translate-y-1 cursor-pointer group shadow-xs hover:shadow-md">
+                                <div class="w-12 h-12 rounded-xl bg-sky-100 text-sky-600 flex items-center justify-center text-xl mb-4 group-hover:bg-sky-500 group-hover:text-white transition-colors">
+                                    <i class="fa-solid fa-shirt"></i>
+                                </div>
+                                <h3 class="font-heading font-bold text-lg text-slate-800 mb-2 group-hover:text-rosa-600 transition">Uniforme Escolar</h3>
+                                <p class="text-sm text-slate-600 mb-4 leading-relaxed">Kit básico de R$ 180,00 na loja parceira Uniformes & Cia. Peças de mostruário disponíveis na secretaria.</p>
+                                <span class="text-xs font-bold text-rosa-600 flex items-center">
+                                    Ver informações do uniforme <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                                </span>
+                            </div>
+
+                            <!-- Category 5 -->
+                            <div @click="selectCategory('pedagogico')" class="glass-card p-6 rounded-2xl hover:border-rosa-400 transition-all transform hover:-translate-y-1 cursor-pointer group shadow-xs hover:shadow-md">
+                                <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center text-xl mb-4 group-hover:bg-amber-500 group-hover:text-white transition-colors">
+                                    <i class="fa-solid fa-graduation-cap"></i>
+                                </div>
+                                <h3 class="font-heading font-bold text-lg text-slate-800 mb-2 group-hover:text-rosa-600 transition">Planejamento Pedagógico</h3>
+                                <p class="text-sm text-slate-600 mb-4 leading-relaxed">Acompanhe pelo Aplicativo/Portal do Aluno, 1ª Reunião de Pais ou solicite a cópia em PDF.</p>
+                                <span class="text-xs font-bold text-rosa-600 flex items-center">
+                                    Como acessar o planejamento <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                                </span>
+                            </div>
+
+                            <!-- Category 6 -->
+                            <div @click="activeTab = 'visita'" class="glass-card p-6 rounded-2xl hover:border-rosa-400 transition-all transform hover:-translate-y-1 cursor-pointer group shadow-xs hover:shadow-md">
+                                <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-xl mb-4 group-hover:bg-emerald-500 group-hover:text-white transition-colors">
+                                    <i class="fa-solid fa-handshake"></i>
+                                </div>
+                                <h3 class="font-heading font-bold text-lg text-slate-800 mb-2 group-hover:text-rosa-600 transition">Agendamento de Visita</h3>
+                                <p class="text-sm text-slate-600 mb-4 leading-relaxed">Visitas agendadas às terças e quintas (às 9h ou 14h) para conhecer nossas instalações e equipe.</p>
+                                <span class="text-xs font-bold text-rosa-600 flex items-center">
+                                    Agendar dia e horário <i class="fa-solid fa-arrow-right ml-2 group-hover:translate-x-1 transition-transform"></i>
+                                </span>
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- Interactive Features Cards Banner -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        
+                        <!-- Tool Card 1: Tuition Simulator -->
+                        <div class="bg-gradient-to-br from-rosa-500 via-rose-500 to-pink-600 text-white rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-xl">
+                            <div class="relative z-10">
+                                <span class="bg-white/20 text-white text-xs font-black uppercase px-3 py-1 rounded-full border border-white/20">Ferramenta Exclusiva</span>
+                                <h3 class="text-2xl font-heading font-black mt-3 mb-2">Simulador de Mensalidades & Economia</h3>
+                                <p class="text-rosa-100 text-sm mb-6 leading-relaxed font-medium">Calcule a mensalidade exata com o desconto de pontualidade de 5% (pagamento até o dia 05) e com o desconto adicional de 10% para o segundo filho.</p>
+                                <button @click="activeTab = 'calculadora'" class="bg-white text-rosa-600 font-extrabold px-6 py-3 rounded-xl hover:bg-rosa-50 transition shadow-lg text-sm inline-flex items-center">
+                                    <i class="fa-solid fa-calculator mr-2"></i> Abrir Simulador Interativo
+                                </button>
+                            </div>
+                            <i class="fa-solid fa-coins absolute -right-6 -bottom-6 text-white/10 text-9xl"></i>
+                        </div>
+
+                        <!-- Tool Card 2: Interactive Visit & Books -->
+                        <div class="bg-gradient-to-br from-slate-800 via-slate-900 to-slate-950 text-white rounded-3xl p-6 sm:p-8 relative overflow-hidden shadow-xl">
+                            <div class="relative z-10">
+                                <span class="bg-rosa-500/30 text-rosa-300 text-xs font-black uppercase px-3 py-1 rounded-full border border-rosa-500/30">Praticidade para a Família</span>
+                                <h3 class="text-2xl font-heading font-black mt-3 mb-2">Visitas Guiadas & Material FTD</h3>
+                                <p class="text-slate-300 text-sm mb-6 leading-relaxed font-medium">Agende seu horário para a próxima terça ou quinta-feira ou pegue nosso cupom exclusivo para compra dos livros didáticos no site da FTD.</p>
+                                <div class="flex flex-wrap gap-3">
+                                    <button @click="activeTab = 'visita'" class="bg-rosa-500 text-white font-extrabold px-5 py-2.5 rounded-xl hover:bg-rosa-600 transition shadow-lg text-sm inline-flex items-center">
+                                        <i class="fa-solid fa-calendar-day mr-2"></i> Agendar Visita Guiada
+                                    </button>
+                                    <button @click="activeTab = 'materiais'" class="bg-slate-700 text-white font-bold px-4 py-2.5 rounded-xl hover:bg-slate-600 transition text-sm inline-flex items-center">
+                                        <i class="fa-solid fa-book mr-2"></i> Ver Cupom FTD
+                                    </button>
+                                </div>
+                            </div>
+                            <i class="fa-solid fa-school-flag absolute -right-6 -bottom-6 text-white/10 text-9xl"></i>
+                        </div>
+
+                    </div>
+
+                    <!-- Official Whatsapp Messages Highlight Box -->
+                    <div class="bg-amber-50/80 border border-amber-200 rounded-3xl p-6 sm:p-8">
+                        <div class="flex items-center space-x-3 mb-4">
+                            <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white flex items-center justify-center font-bold text-lg shrink-0">
+                                <i class="fa-solid fa-comment-dots"></i>
+                            </div>
+                            <div>
+                                <h3 class="font-heading font-bold text-slate-800 text-lg">Respostas Padrão da Secretaria Escolar</h3>
+                                <p class="text-xs text-slate-600">Estas são as informações oficiais transmitidas diretamente aos responsáveis</p>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-white p-4 rounded-2xl border border-amber-100 text-xs text-slate-700 leading-relaxed shadow-2xs">
+                                <strong class="text-rosa-600 block mb-1">💳 Investimento & Vencimento:</strong>
+                                "Entendemos que o planejamento financeiro da família é fundamental! O investimento na Educação Infantil é de R$ 850,00 mensais no turno parcial, com vencimento todo dia 05. Esse valor cobre toda a nossa estrutura pedagógica e o cuidado diário com o seu filho."
+                            </div>
+
+                            <div class="bg-white p-4 rounded-2xl border border-amber-100 text-xs text-slate-700 leading-relaxed shadow-2xs">
+                                <strong class="text-rosa-600 block mb-1">🎁 Descontos de Pontualidade e Irmãos:</strong>
+                                "Queremos apoiar a sua família! Oferecemos um desconto de pontualidade de 5% para pagamentos realizados até o dia 05. Se você tiver mais de um filho matriculado conosco, a mensalidade do irmãozinho ganha 10% de desconto."
+                            </div>
+
+                            <div class="bg-white p-4 rounded-2xl border border-amber-100 text-xs text-slate-700 leading-relaxed shadow-2xs">
+                                <strong class="text-rosa-600 block mb-1">📦 Taxa de Material Coletivo:</strong>
+                                "Pensando na sua praticidade, oferecemos duas opções: você pode pagar a taxa de material coletivo de R$ 350,00 (e nós cuidamos de toda a compra e organização), ou pode solicitar a lista completa na secretaria para comprar onde preferir."
+                            </div>
+
+                            <div class="bg-white p-4 rounded-2xl border border-amber-100 text-xs text-slate-700 leading-relaxed shadow-2xs">
+                                <strong class="text-rosa-600 block mb-1">👕 Uniforme & Mostruário:</strong>
+                                "Nosso uniforme foi pensado para ser super confortável e resistente para as crianças brincarem à vontade! O kit básico custa R$ 180,00 e é vendido diretamente pela loja parceira Uniformes & Cia. Temos peças mostruário na secretaria para você conferir os tamanhos."
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TAB 2: FAQ / TIRA-DÚVIDAS -->
+                <div v-if="activeTab === 'faq'" class="space-y-6">
+                    
+                    <!-- Filter and Category Selector Bar -->
+                    <div class="glass-card p-4 rounded-2xl flex flex-wrap items-center justify-between gap-3">
+                        <div class="flex items-center space-x-2 overflow-x-auto pb-2 sm:pb-0 w-full lg:w-auto custom-scrollbar">
+                            <button 
+                                @click="selectedCategoryFilter = 'all'" 
+                                :class="selectedCategoryFilter === 'all' ? 'bg-rosa-500 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" 
+                                class="px-4 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition"
+                            >
+                                Todas as Dúvidas
+                            </button>
+                            <button 
+                                @click="selectedCategoryFilter = 'mensalidades'" 
+                                :class="selectedCategoryFilter === 'mensalidades' ? 'bg-rosa-500 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" 
+                                class="px-4 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition"
+                            >
+                                💳 Mensalidades & Descontos
+                            </button>
+                            <button 
+                                @click="selectedCategoryFilter = 'materiais'" 
+                                :class="selectedCategoryFilter === 'materiais' ? 'bg-rosa-500 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" 
+                                class="px-4 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition"
+                            >
+                                📦 Material Escolar (R$ 350)
+                            </button>
+                            <button 
+                                @click="selectedCategoryFilter = 'livros'" 
+                                :class="selectedCategoryFilter === 'livros' ? 'bg-rosa-500 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" 
+                                class="px-4 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition"
+                            >
+                                📚 Livros FTD
+                            </button>
+                            <button 
+                                @click="selectedCategoryFilter = 'uniformes'" 
+                                :class="selectedCategoryFilter === 'uniformes' ? 'bg-rosa-500 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" 
+                                class="px-4 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition"
+                            >
+                                👕 Uniforme (R$ 180)
+                            </button>
+                            <button 
+                                @click="selectedCategoryFilter = 'visitas'" 
+                                :class="selectedCategoryFilter === 'visitas' ? 'bg-rosa-500 text-white font-bold' : 'bg-slate-100 text-slate-600 hover:bg-slate-200'" 
+                                class="px-4 py-2 rounded-xl text-xs sm:text-sm whitespace-nowrap transition"
+                            >
+                                🗓️ Agendamento de Visitas
+                            </button>
+                        </div>
+
+                        <div class="text-xs text-slate-500 font-bold w-full sm:w-auto text-right">
+                            Exibindo {{ filteredFaqs.length }} tópicos oficiais
+                        </div>
+                    </div>
+
+                    <!-- Search status if active -->
+                    <div v-if="searchQuery" class="bg-rosa-50 border border-rosa-200 px-4 py-3 rounded-xl flex items-center justify-between">
+                        <span class="text-sm text-rosa-800 font-medium">
+                            Filtrando por: <strong class="text-rosa-600">"{{ searchQuery }}"</strong>
+                        </span>
+                        <button @click="searchQuery = ''" class="text-xs font-extrabold text-rosa-600 hover:underline">
+                            Limpar busca
+                        </button>
+                    </div>
+
+                    <!-- Accordion List -->
+                    <div class="space-y-4">
+                        <div 
+                            v-for="(faq, index) in filteredFaqs" 
+                            :key="index"
+                            class="bg-white rounded-2xl border border-rosa-100 overflow-hidden shadow-2xs hover:shadow-md transition"
+                        >
+                            <button 
+                                @click="toggleFaq(faq.id)" 
+                                class="w-full text-left p-5 flex items-center justify-between font-heading font-bold text-slate-800 text-base sm:text-lg focus:outline-none"
+                            >
+                                <span class="flex items-center space-x-3 pr-4">
+                                    <span class="w-9 h-9 rounded-xl bg-rosa-50 text-rosa-500 flex items-center justify-center shrink-0 text-sm">
+                                        <i :class="faq.icon || 'fa-solid fa-circle-question'"></i>
+                                    </span>
+                                    <span>{{ faq.question }}</span>
+                                </span>
+                                <i class="fa-solid fa-chevron-down text-rosa-400 transition-transform duration-200" :class="{'rotate-180': openFaqId === faq.id}"></i>
+                            </button>
+
+                            <div v-if="openFaqId === faq.id" class="px-5 pb-5 pt-1 text-slate-600 text-sm sm:text-base border-t border-slate-50 leading-relaxed bg-rosa-50/20">
+                                
+                                <!-- Official Quote Banner -->
+                                <div class="my-2 p-3 bg-white border-l-4 border-rosa-500 rounded-r-xl shadow-2xs text-slate-700 text-xs sm:text-sm italic">
+                                    "{{ faq.officialQuote }}"
+                                </div>
+
+                                <div v-html="faq.details" class="mt-3 text-xs sm:text-sm text-slate-600 space-y-2"></div>
+                                
+                                <div class="mt-4 pt-4 border-t border-rosa-100/60 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2 text-xs text-slate-400">
+                                    <span>Categoria: <strong class="text-slate-600 uppercase">{{ faq.category }}</strong></span>
+                                    <button @click="openContactModal(faq.question)" class="text-rosa-600 hover:text-rosa-700 font-extrabold hover:underline flex items-center">
+                                        Ficou com dúvidas sobre esta resposta? Falar com Secretaria <i class="fa-solid fa-paper-plane ml-1"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Empty State -->
+                        <div v-if="filteredFaqs.length === 0" class="text-center py-12 bg-white rounded-3xl border border-dashed border-rosa-200">
+                            <i class="fa-solid fa-magnifying-glass text-4xl text-rosa-300 mb-3"></i>
+                            <h3 class="font-heading font-bold text-lg text-slate-700">Nenhum resultado encontrado</h3>
+                            <p class="text-slate-500 text-sm max-w-md mx-auto mt-1 mb-4">Não encontramos respostas para esta pesquisa específica. Deixe sua pergunta para a nossa secretaria!</p>
+                            <button @click="openContactModal(searchQuery)" class="bg-rosa-500 hover:bg-rosa-600 text-white font-bold px-5 py-2.5 rounded-xl text-sm shadow-md">
+                                Enviar Pergunta para a Secretaria
+                            </button>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TAB 3: SIMULADOR DE MENSALIDADE -->
+                <div v-if="activeTab === 'calculadora'" class="max-w-4xl mx-auto">
+                    
+                    <div class="bg-white rounded-3xl border border-rosa-200 shadow-xl overflow-hidden">
+                        
+                        <!-- Header -->
+                        <div class="bg-gradient-to-r from-rosa-500 via-rose-500 to-pink-500 p-6 sm:p-8 text-white">
+                            <span class="bg-white/20 text-white text-xs font-extrabold uppercase px-3 py-1 rounded-full border border-white/20">Simulador Transparente</span>
+                            <h2 class="text-2xl sm:text-3xl font-heading font-black mt-2">Calculadora de Mensalidades & Economia</h2>
+                            <p class="text-rosa-100 text-sm mt-1 font-medium">Simule o valor final da mensalidade com o desconto de pontualidade até o dia 05 e o desconto de irmãozinho.</p>
+                        </div>
+
+                        <div class="p-6 sm:p-8 grid grid-cols-1 md:grid-cols-2 gap-8">
+                            
+                            <!-- Controls Form -->
+                            <div class="space-y-6">
+                                
+                                <!-- Base Tuition Info -->
+                                <div>
+                                    <label class="block text-xs font-black text-slate-500 uppercase tracking-wider mb-2">1. Modalidade de Turno</label>
+                                    <div class="p-4 bg-rosa-50 border-2 border-rosa-200 rounded-2xl flex items-center justify-between">
+                                        <div>
+                                            <span class="font-bold text-slate-800 text-sm block">Turno Parcial Padrão</span>
+                                            <span class="text-xs text-slate-500">Cobre estrutura pedagógica e cuidado diário</span>
+                                        </div>
+                                        <span class="text-lg font-black text-rosa-600">R$ 850,00</span>
+                                    </div>
+                                </div>
+
+                                <!-- Payment Date Toggle -->
+                                <div>
+                                    <label class="block text-xs font-black text-slate-500 uppercase tracking-wider mb-2">2. Data de Pagamento Planejada</label>
+                                    <div class="grid grid-cols-2 gap-3">
+                                        <button 
+                                            type="button"
+                                            @click="calcForm.payOnTime = true" 
+                                            :class="calcForm.payOnTime ? 'border-emerald-500 bg-emerald-50 text-emerald-800 font-extrabold shadow-xs' : 'border-slate-200 text-slate-600'" 
+                                            class="p-3 border-2 rounded-xl text-center text-sm transition"
+                                        >
+                                            <i class="fa-solid fa-circle-check text-emerald-500 mr-1" v-if="calcForm.payOnTime"></i> Até o dia 05<br>
+                                            <span class="text-xs font-semibold text-emerald-600">(5% Desconto)</span>
+                                        </button>
+                                        <button 
+                                            type="button"
+                                            @click="calcForm.payOnTime = false" 
+                                            :class="!calcForm.payOnTime ? 'border-rose-500 bg-rose-50 text-rose-800 font-extrabold shadow-xs' : 'border-slate-200 text-slate-600'" 
+                                            class="p-3 border-2 rounded-xl text-center text-sm transition"
+                                        >
+                                            <i class="fa-solid fa-clock-rotate-left text-rose-500 mr-1" v-if="!calcForm.payOnTime"></i> Após o dia 05<br>
+                                            <span class="text-xs font-semibold text-rose-600">(Sem Desconto + 2%)</span>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <!-- Sibling Discount Checkbox -->
+                                <div>
+                                    <label class="block text-xs font-black text-slate-500 uppercase tracking-wider mb-2">3. Benefício Familiar</label>
+                                    
+                                    <label class="flex items-center space-x-3 p-3.5 bg-slate-50 rounded-xl cursor-pointer hover:bg-rosa-50/50 transition border border-slate-200">
+                                        <input type="checkbox" v-model="calcForm.hasSibling" class="w-5 h-5 text-rosa-500 rounded focus:ring-rosa-400">
+                                        <div>
+                                            <span class="text-xs sm:text-sm font-bold text-slate-800 block">2º Filho Matriculado (10% de Desconto)</span>
+                                            <span class="text-[11px] text-slate-500">Aplica-se 10% de desconto adicional na mensalidade do irmãozinho.</span>
+                                        </div>
+                                    </label>
+                                </div>
+
+                            </div>
+
+                            <!-- Calculation Result Card -->
+                            <div class="bg-slate-50 rounded-2xl p-6 border border-slate-200 flex flex-col justify-between">
+                                <div>
+                                    <h3 class="font-heading font-extrabold text-slate-800 text-lg mb-4 border-b border-slate-200 pb-3 flex justify-between items-center">
+                                        <span>Resumo da Mensalidade</span>
+                                        <span class="text-xs font-bold text-slate-400">Vencimento Dia 05</span>
+                                    </h3>
+
+                                    <div class="space-y-3 text-sm">
+                                        <div class="flex justify-between text-slate-600">
+                                            <span>Valor da Mensalidade Base:</span>
+                                            <span class="font-bold">R$ 850,00</span>
+                                        </div>
+
+                                        <div v-if="calcForm.payOnTime" class="flex justify-between text-emerald-600 font-bold">
+                                            <span>Desconto Pontualidade (5%):</span>
+                                            <span>- R$ 42,50</span>
+                                        </div>
+
+                                        <div v-if="calcForm.hasSibling" class="flex justify-between text-emerald-600 font-bold">
+                                            <span>Desconto de Irmão (10%):</span>
+                                            <span>- R$ 85,00</span>
+                                        </div>
+
+                                        <div v-if="!calcForm.payOnTime" class="flex justify-between text-rose-600 font-bold">
+                                            <span>Multa Atraso (+2%):</span>
+                                            <span>+ R$ 17,00</span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-6 pt-6 border-t-2 border-dashed border-slate-200">
+                                        <span class="text-xs font-black text-slate-400 uppercase tracking-widest block">Valor Final Estimado</span>
+                                        <div class="text-3xl sm:text-4xl font-heading font-black text-rosa-600 mt-1">
+                                            R$ {{ calculatedFinalPrice.toFixed(2) }}
+                                            <span class="text-xs font-normal text-slate-500">/mês</span>
+                                        </div>
+                                        
+                                        <div v-if="annualSavings > 0" class="mt-3 p-2.5 bg-emerald-100/70 border border-emerald-200 rounded-xl text-xs font-bold text-emerald-800">
+                                            🎉 Economia total acumulada: <strong>R$ {{ annualSavings.toFixed(2) }} / ano</strong> com os descontos!
+                                        </div>
+
+                                        <p v-if="calcForm.payOnTime" class="text-xs text-emerald-600 font-semibold mt-2 flex items-center">
+                                            <i class="fa-solid fa-circle-check mr-1"></i> Desconto garantido pagando até o dia 05!
+                                        </p>
+                                        <p v-else class="text-xs text-rose-600 font-semibold mt-2 flex items-center">
+                                            <i class="fa-solid fa-circle-info mr-1"></i> Após o dia 05 o desconto de pontualidade é retirado.
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div class="mt-6 space-y-2">
+                                    <button @click="activeTab = 'visita'" class="w-full bg-rosa-500 hover:bg-rosa-600 text-white font-bold py-3.5 rounded-xl shadow-md transition text-center text-sm flex items-center justify-center">
+                                        <i class="fa-solid fa-calendar-check mr-2"></i> Agendar Visita Guiada para Conhecer a Escola
+                                    </button>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <!-- TAB 4: TAXA DE MATERIAL, LIVROS FTD & UNIFORME -->
+                <div v-if="activeTab === 'materiais'" class="space-y-8">
+                    
+                    <!-- Section 1: Books FTD Coleção Farol -->
+                    <div class="bg-gradient-to-r from-blue-900 via-indigo-900 to-slate-900 text-white rounded-3xl p-6 sm:p-8 shadow-xl relative overflow-hidden">
+                        <div class="relative z-10 grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                            <div class="lg:col-span-2 space-y-3">
+                                <span class="bg-blue-500/30 text-blue-200 text-xs font-black uppercase px-3 py-1 rounded-full border border-blue-400/30">Sistema Didático Adotado</span>
+                                <h3 class="text-2xl sm:text-3xl font-heading font-black">Editora FTD - Coleção Farol 📚</h3>
+                                <p class="text-slate-200 text-sm leading-relaxed font-medium">
+                                    "Olá, família! Trabalhamos com o sistema de ensino da Editora FTD (Coleção Farol). Os livros são comprados diretamente no site da editora usando o nosso cupom de desconto exclusivo, e você recebe tudo em casa."
+                                </p>
+                                
+                                <div class="p-4 bg-white/10 rounded-2xl backdrop-blur-xs border border-white/10 text-xs space-y-2">
+                                    <p class="font-bold text-blue-200"><i class="fa-solid fa-circle-info mr-1"></i> Instruções para Adquirir:</p>
+                                    <ol class="list-decimal pl-4 space-y-1 text-slate-300">
+                                        <li>Acesse a loja oficial da Editora FTD (ftdeducacao.com.br).</li>
+                                        <li>Selecione o ano escolar do aluno (Maternal / Pré-Escola).</li>
+                                        <li>Insira nosso cupom oficial para garantir o valor com desconto.</li>
+                                    </ol>
+                                </div>
+                            </div>
+
+                            <div class="bg-white text-slate-800 p-6 rounded-2xl shadow-lg space-y-4 text-center">
+                                <div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-2xl flex items-center justify-center text-xl mx-auto">
+                                    <i class="fa-solid fa-ticket"></i>
+                                </div>
+                                <div>
+                                    <span class="text-xs font-bold text-slate-400 uppercase">Cupom Exclusivo da Escola</span>
+                                    <div class="bg-slate-100 p-3 rounded-xl border border-dashed border-slate-300 mt-1 flex items-center justify-between font-mono font-bold text-slate-800 text-sm">
+                                        <span>COR-ROSA-FTD2026</span>
+                                        <button @click="copyCupom" class="text-xs bg-blue-600 hover:bg-blue-700 text-white font-sans px-2.5 py-1 rounded-lg transition">
+                                            {{ cupomCopied ? 'Copiado!' : 'Copiar' }}
+                                        </button>
+                                    </div>
+                                </div>
+                                <a href="https://wa.me/5521999999999?text=Olá!%20Gostaria%20de%20ajuda%20com%20o%20passo%20a%20passo%20para%20comprar%20os%20livros%20da%20FTD%20Coleção%20Farol." target="_blank" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2.5 rounded-xl text-xs block transition shadow-md">
+                                    Pedir Ajuda com o Cupom no WhatsApp
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 2: Material Fee Options -->
+                    <div class="bg-white rounded-3xl border border-rosa-200 p-6 sm:p-8 shadow-sm">
+                        <div class="max-w-3xl">
+                            <span class="bg-purple-100 text-purple-700 text-xs font-black uppercase px-3 py-1 rounded-full">Praticidade para os Pais</span>
+                            <h2 class="text-2xl font-heading font-black text-slate-800 mt-2">Material Escolar</h2>
+                            <p class="text-slate-600 text-sm mt-1 leading-relaxed">
+                                "Pensando na sua praticidade, oferecemos duas opções para o material dos nossos alunos:"
+                            </p>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
+                            <!-- Option A -->
+                            <div class="bg-rosa-50/70 border-2 border-rosa-300 rounded-2xl p-6 flex flex-col justify-between hover:shadow-md transition">
+                                <div>
+                                    <div class="inline-flex items-center space-x-2 bg-rosa-500 text-white px-3 py-1 rounded-lg text-xs font-black mb-3">
+                                        <span>Opção 1</span> • <span>Praticidade Total</span>
+                                    </div>
+                                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">Taxa de Material Coletivo</h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                                        Pague a taxa única de <strong>R$ 350,00</strong> e a equipe do Jardim Escola Cor de Rosa cuida de toda a compra, transporte e organização pedagógica dos itens.
+                                    </p>
+                                </div>
+                                <button @click="openContactModal('Desejo optar pela Taxa de Material Coletivo no valor de R$ 350,00')" class="w-full bg-rosa-500 hover:bg-rosa-600 text-white font-bold py-3 rounded-xl text-xs transition shadow-xs flex items-center justify-center">
+                                    <i class="fa-solid fa-pix mr-2"></i> Solicitar Chave PIX para Taxa de R$ 350
+                                </button>
+                            </div>
+
+                            <!-- Option B -->
+                            <div class="bg-slate-50 border-2 border-slate-200 rounded-2xl p-6 flex flex-col justify-between hover:shadow-md transition">
+                                <div>
+                                    <div class="inline-flex items-center space-x-2 bg-slate-700 text-white px-3 py-1 rounded-lg text-xs font-black mb-3">
+                                        <span>Opção 2</span> • <span>Compra Própria</span>
+                                    </div>
+                                    <h3 class="font-heading font-bold text-xl text-slate-800 mb-1">Solicitar Lista de Materiais</h3>
+                                    <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                                        Solicite a lista individual de materiais na secretaria para adquirir os itens nas papelarias de sua preferência e entregar na escola antes do início das aulas.
+                                    </p>
+                                </div>
+                                <button @click="openContactModal('Gostaria de receber a Lista Completa de Materiais em PDF')" class="w-full bg-slate-800 hover:bg-slate-900 text-white font-bold py-3 rounded-xl text-xs transition shadow-xs flex items-center justify-center">
+                                    <i class="fa-solid fa-file-pdf mr-2"></i> Solicitar Lista Completa em PDF
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Section 3: Uniform Info -->
+                    <div class="bg-white rounded-3xl border border-rosa-200 p-6 sm:p-8 shadow-sm">
+                        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-center">
+                            <div class="lg:col-span-2 space-y-3">
+                                <span class="bg-sky-100 text-sky-700 text-xs font-black uppercase px-3 py-1 rounded-full">Uniforme Escolar Oficial</span>
+                                <h3 class="text-xl sm:text-2xl font-heading font-black text-slate-800">Conforto e Resistência para Brincar 👕</h3>
+                                <p class="text-sm text-slate-600 leading-relaxed font-medium">
+                                    "Nosso uniforme foi pensado para ser super confortável e resistente para as crianças brincarem à vontade! O kit básico custa **R$ 180,00** e é vendido diretamente pela loja parceira **Uniformes & Cia**. Temos peças mostruário na secretaria para você conferir os tamanhos."
+                                </p>
+                            </div>
+
+                            <div class="bg-sky-50 border border-sky-200 p-5 rounded-2xl text-center space-y-3">
+                                <div class="text-2xl font-black text-sky-700">Kit Básico • R$ 180,00</div>
+                                <p class="text-xs text-slate-600">Loja Parceira: <strong>Uniformes & Cia</strong></p>
+                                <button @click="openContactModal('Gostaria de agendar para ver o mostruário de tamanhos do uniforme na secretaria')" class="w-full bg-sky-500 hover:bg-sky-600 text-white font-bold py-2.5 rounded-xl text-xs transition shadow-xs">
+                                    Conferir Tamanhos na Secretaria
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- TAB 5: AGENDAMENTO DE VISITA -->
+                <div v-if="activeTab === 'visita'" class="max-w-3xl mx-auto">
+                    
+                    <div class="bg-white rounded-3xl border border-rosa-200 p-6 sm:p-10 shadow-xl space-y-6">
+                        <div class="text-center max-w-xl mx-auto">
+                            <div class="w-16 h-16 bg-rosa-100 text-rosa-600 rounded-3xl flex items-center justify-center text-2xl mx-auto mb-4 shadow-inner">
+                                <i class="fa-solid fa-calendar-days"></i>
+                            </div>
+                            <h2 class="text-2xl sm:text-3xl font-heading font-black text-slate-800">Agende sua Visita Guiada</h2>
+                            <p class="text-slate-600 text-sm mt-2 leading-relaxed font-medium">
+                                "Ficarei muito feliz em receber sua família! Adoramos apresentar nossos espaços e conversar sobre como acolhemos nossos alunos."
+                            </p>
+                        </div>
+
+                        <!-- Scheduled Visit Notice Card -->
+                        <div class="bg-rosa-50 border border-rosa-200 rounded-2xl p-5 text-center space-y-1">
+                            <span class="text-xs font-black text-rosa-700 uppercase tracking-wider block">Horários Oficiais de Visitas Guiadas</span>
+                            <p class="text-base sm:text-lg font-extrabold text-slate-800">
+                                Terças e Quintas-feiras <span class="text-rosa-500">•</span> às 09:00h ou 14:00h
+                            </p>
+                            <p class="text-xs text-slate-500">Atendimento individualizado com hora marcada para acolher melhor sua família.</p>
+                        </div>
+
+                        <!-- Schedule Form -->
+                        <form @submit.prevent="submitVisitForm" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Nome do Responsável *</label>
+                                    <input type="text" required v-model="visitForm.name" placeholder="Seu nome completo" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-rosa-400">
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">WhatsApp para Confirmação *</label>
+                                    <input type="tel" required v-model="visitForm.phone" placeholder="(21) 99999-9999" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-rosa-400">
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Dia Preferencial *</label>
+                                    <select v-model="visitForm.day" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-rosa-400">
+                                        <option value="Terça-feira">Terça-feira</option>
+                                        <option value="Quinta-feira">Quinta-feira</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-700 mb-1">Horário Preferencial *</label>
+                                    <select v-model="visitForm.time" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm font-bold text-slate-800 outline-none focus:border-rosa-400">
+                                        <option value="09:00h (Turno Manhã)">09:00h (Turno Manhã)</option>
+                                        <option value="14:00h (Turno Tarde)">14:00h (Turno Tarde)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-xs font-bold text-slate-700 mb-1">Idade do Aluno ou Observação</label>
+                                <input type="text" v-model="visitForm.notes" placeholder="Ex: Criança com 3 anos para a Pré-Escola" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm outline-none focus:border-rosa-400">
+                            </div>
+
+                            <div v-if="visitSuccessMessage" class="p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold text-center">
+                                {{ visitSuccessMessage }}
+                            </div>
+
+                            <button type="submit" class="w-full bg-rosa-500 hover:bg-rosa-600 text-white font-bold py-3.5 rounded-xl shadow-md transition text-sm">
+                                Confirmar Agendamento de Visita
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+
+            </section>
+        </main>
+
+        <!-- FLOATING VIRTUAL ASSISTANT (CHATBOT "ROSITA") -->
+        <div class="fixed bottom-6 right-6 z-50">
+            
+            <!-- Floating Trigger Button -->
+            <button 
+                @click="chatOpen = !chatOpen" 
+                class="bg-gradient-to-tr from-rosa-600 to-rosa-400 hover:from-rosa-700 hover:to-rosa-500 text-white w-14 h-14 sm:w-16 sm:h-16 rounded-full flex items-center justify-center shadow-2xl transition transform hover:scale-105 focus:outline-none relative"
+            >
+                <i class="fa-solid text-2xl sm:text-3xl" :class="chatOpen ? 'fa-xmark' : 'fa-headset'"></i>
+                
+                <!-- Online Pulse Dot -->
+                <span v-if="!chatOpen" class="absolute top-1 right-1 flex h-4 w-4">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-4 w-4 bg-emerald-500 border-2 border-white"></span>
+                </span>
+            </button>
+
+            <!-- Chat Window Popup -->
+            <div 
+                v-if="chatOpen" 
+                class="absolute bottom-20 right-0 w-80 sm:w-96 bg-white rounded-3xl shadow-2xl border border-rosa-200 overflow-hidden flex flex-col h-[490px] animate-fade-in chat-bubble-shadow"
+            >
+                <!-- Chat Header -->
+                <div class="bg-gradient-to-r from-rosa-500 to-rose-500 p-4 text-white flex items-center justify-between">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 rounded-full bg-white text-rosa-500 flex items-center justify-center font-bold text-lg shadow-inner">
+                            <i class="fa-solid fa-face-smile"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-heading font-extrabold text-sm leading-tight">Assistente Rosita</h4>
+                            <span class="text-xs text-rosa-100 flex items-center">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1"></span> Resposta Oficial da Secretaria
+                            </span>
+                        </div>
+                    </div>
+                    <button @click="chatOpen = false" class="text-white/80 hover:text-white p-1">
+                        <i class="fa-solid fa-xmark text-lg"></i>
+                    </button>
+                </div>
+
+                <!-- Chat Body Messages -->
+                <div class="flex-grow p-4 overflow-y-auto space-y-3 custom-scrollbar text-xs sm:text-sm bg-rosa-50/30">
+                    
+                    <div v-for="(msg, i) in chatMessages" :key="i" :class="msg.sender === 'user' ? 'text-right' : 'text-left'">
+                        <div 
+                            :class="msg.sender === 'user' ? 'bg-rosa-500 text-white rounded-br-none ml-auto' : 'bg-white text-slate-700 border border-rosa-100 rounded-bl-none shadow-2xs'" 
+                            class="inline-block max-w-[85%] p-3 rounded-2xl leading-relaxed"
+                        >
+                            <span v-html="msg.text"></span>
+                        </div>
+                        <span class="block text-[10px] text-slate-400 mt-1 px-1">{{ msg.time }}</span>
+                    </div>
+
+                </div>
+
+                <!-- Quick Prompts Buttons inside Chat -->
+                <div class="p-2 border-t border-slate-100 bg-white flex flex-wrap gap-1">
+                    <button @click="sendQuickChat('Qual o valor da mensalidade?')" class="bg-rosa-50 hover:bg-rosa-100 text-rosa-700 text-[11px] font-bold px-2 py-1 rounded-full border border-rosa-200">
+                        💳 Mensalidade R$ 850
+                    </button>
+                    <button @click="sendQuickChat('Como comprar o livro da FTD?')" class="bg-rosa-50 hover:bg-rosa-100 text-rosa-700 text-[11px] font-bold px-2 py-1 rounded-full border border-rosa-200">
+                        📚 Livro FTD
+                    </button>
+                    <button @click="sendQuickChat('Como funciona o uniforme de R$ 180?')" class="bg-rosa-50 hover:bg-rosa-100 text-rosa-700 text-[11px] font-bold px-2 py-1 rounded-full border border-rosa-200">
+                        👕 Uniforme R$ 180
+                    </button>
+                    <button @click="sendQuickChat('Qual a taxa do material?')" class="bg-rosa-50 hover:bg-rosa-100 text-rosa-700 text-[11px] font-bold px-2 py-1 rounded-full border border-rosa-200">
+                        📦 Material R$ 350
+                    </button>
+                </div>
+
+                <!-- Chat Input Footer -->
+                <form @submit.prevent="handleChatSubmit" class="p-3 border-t border-rosa-100 bg-white flex items-center space-x-2">
+                    <input 
+                        type="text" 
+                        v-model="chatInput" 
+                        placeholder="Digite sua dúvida..." 
+                        class="flex-grow p-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs sm:text-sm text-slate-800 focus:outline-none focus:border-rosa-400"
+                    >
+                    <button type="submit" class="bg-rosa-500 hover:bg-rosa-600 text-white w-10 h-10 rounded-xl flex items-center justify-center shrink-0 transition">
+                        <i class="fa-solid fa-paper-plane text-xs"></i>
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- CONTACT MODAL / FALAR COM SECRETARIA -->
+        <div v-if="contactModalOpen" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/60 backdrop-blur-xs">
+            <div class="bg-white rounded-3xl max-w-lg w-full p-6 sm:p-8 border border-rosa-200 shadow-2xl relative animate-fade-in">
+                
+                <button @click="contactModalOpen = false" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+
+                <div class="flex items-center space-x-3 mb-4">
+                    <div class="w-10 h-10 rounded-xl bg-rosa-100 text-rosa-600 flex items-center justify-center text-lg">
+                        <i class="fa-solid fa-envelope"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-heading font-black text-xl text-slate-800">Enviar Mensagem à Secretaria</h3>
+                        <p class="text-xs text-slate-500">Retorno rápido por WhatsApp ou e-mail</p>
+                    </div>
+                </div>
+
+                <form @submit.prevent="submitContactForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Nome do Responsável *</label>
+                        <input type="text" required v-model="contactForm.name" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:border-rosa-400 outline-none">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">WhatsApp de Contato *</label>
+                            <input type="tel" required v-model="contactForm.phone" placeholder="(21) 99999-9999" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:border-rosa-400 outline-none">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-600 mb-1">Assunto</label>
+                            <select v-model="contactForm.subject" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:border-rosa-400 outline-none">
+                                <option value="Secretaria Geral">Secretaria Geral</option>
+                                <option value="Financeiro / Mensalidade">Financeiro / Mensalidade</option>
+                                <option value="Livros FTD">Livros FTD Coleção Farol</option>
+                                <option value="Taxa de Material">Taxa de Material (R$ 350)</option>
+                                <option value="Uniforme Escolar">Uniforme (Kit R$ 180)</option>
+                                <option value="Agendamento de Visita">Agendamento de Visita Guiada</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-600 mb-1">Sua Mensagem ou Dúvida *</label>
+                        <textarea rows="3" required v-model="contactForm.message" class="w-full p-3 bg-slate-50 border border-slate-200 rounded-xl text-sm focus:border-rosa-400 outline-none"></textarea>
+                    </div>
+
+                    <div v-if="contactSuccessMessage" class="p-3 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold">
+                        {{ contactSuccessMessage }}
+                    </div>
+
+                    <div class="pt-2 flex justify-end space-x-3">
+                        <button type="button" @click="contactModalOpen = false" class="px-4 py-2.5 rounded-xl border border-slate-200 text-slate-600 text-sm font-bold hover:bg-slate-50">
+                            Cancelar
+                        </button>
+                        <button type="submit" class="px-6 py-2.5 rounded-xl bg-rosa-500 hover:bg-rosa-600 text-white text-sm font-bold shadow-md">
+                            Enviar Mensagem
+                        </button>
+                    </div>
+                </form>
+
+            </div>
+        </div>
+
+        <!-- FOOTER -->
+        <footer class="bg-slate-900 text-white pt-12 pb-8 border-t border-slate-800 mt-auto">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8 pb-8 border-b border-slate-800">
+                    
+                    <div class="space-y-3">
+                        <div class="flex items-center space-x-2">
+                            <div class="w-8 h-8 rounded-lg bg-rosa-500 flex items-center justify-center text-white font-bold text-sm">
+                                <i class="fa-solid fa-child-reaching"></i>
+                            </div>
+                            <span class="font-heading font-black text-lg text-white">Jardim Escola Cor de Rosa</span>
+                        </div>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Acolhimento, carinho e ensino de qualidade na Educação Infantil. Parceiros da Editora FTD Coleção Farol e Uniformes & Cia.
+                        </p>
+                    </div>
+
+                    <div>
+                        <h5 class="font-heading font-bold text-rosa-300 text-sm uppercase tracking-wider mb-3">Resumo Financeiro</h5>
+                        <ul class="text-xs text-slate-400 space-y-2">
+                            <li><i class="fa-solid fa-circle-check text-rosa-400 mr-2"></i> Mensalidade: R$ 850,00 (Turno Parcial)</li>
+                            <li><i class="fa-solid fa-clock text-rosa-400 mr-2"></i> Vencimento: Todo dia 05</li>
+                            <li><i class="fa-solid fa-percent text-rosa-400 mr-2"></i> 5% Pontualidade | 10% 2º Filho</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h5 class="font-heading font-bold text-rosa-300 text-sm uppercase tracking-wider mb-3">Parceiros & Materiais</h5>
+                        <ul class="text-xs text-slate-400 space-y-2">
+                            <li><i class="fa-solid fa-book-open text-rosa-400 mr-2"></i> FTD Coleção Farol (Cupom Exclusivo)</li>
+                            <li><i class="fa-solid fa-shirt text-rosa-400 mr-2"></i> Uniformes & Cia (Kit R$ 180,00)</li>
+                            <li><i class="fa-solid fa-box-open text-rosa-400 mr-2"></i> Taxa Material Coletivo (R$ 350,00)</li>
+                        </ul>
+                    </div>
+
+                    <div>
+                        <h5 class="font-heading font-bold text-rosa-300 text-sm uppercase tracking-wider mb-3">Visitas Guiadas</h5>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Terças e Quintas-feiras às 09:00h ou 14:00h com agendamento prévio na secretaria escolar.
+                        </p>
+                    </div>
+
+                </div>
+
+                <div class="flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 gap-4">
+                    <p>© 2026 Jardim Escola Cor de Rosa. Todos os direitos reservados.</p>
+                    <p class="text-slate-400">Educação Infantil com Amor, Transparência e Cuidado</p>
+                </div>
+            </div>
+        </footer>
+
+    </div>
+
+    <script>
+        const { createApp } = Vue;
+
+        createApp({
+            data() {
+                return {
+                    activeTab: 'home', // 'home', 'faq', 'calculadora', 'materiais', 'visita'
+                    mobileMenuOpen: false,
+                    searchQuery: '',
+                    selectedCategoryFilter: 'all',
+                    openFaqId: 1,
+                    cupomCopied: false,
+
+                    // Tuition Calculator State
+                    calcForm: {
+                        payOnTime: true,
+                        hasSibling: false
+                    },
+
+                    // Visit Form State
+                    visitForm: {
+                        name: '',
+                        phone: '',
+                        day: 'Terça-feira',
+                        time: '09:00h (Turno Manhã)',
+                        notes: ''
+                    },
+                    visitSuccessMessage: '',
+
+                    // Official Knowledgebase FAQs Data (Exact Auto-Responses from Whatsapp Prints)
+                    faqs: [
+                        {
+                            id: 1,
+                            category: 'mensalidades',
+                            icon: 'fa-solid fa-hand-holding-dollar',
+                            question: 'Qual é o valor da mensalidade e a data de vencimento?',
+                            officialQuote: 'Entendemos que o planejamento financeiro da família é fundamental! O investimento na Educação Infantil é de R$ 850,00 mensais no turno parcial, com vencimento todo dia 05. Esse valor cobre toda a nossa estrutura pedagógica e o cuidado diário com o seu filho.',
+                            details: '<p>• <strong>Turno Parcial:</strong> R$ 850,00 por mês.</p><p>• <strong>Vencimento:</strong> Todo dia 05 de cada mês.</p><p>• <strong>O que inclui:</strong> Acesso à estrutura completa, equipe pedagógica especializada e acompanhamento diário do aluno.</p>'
+                        },
+                        {
+                            id: 2,
+                            category: 'mensalidades',
+                            icon: 'fa-solid fa-percent',
+                            question: 'Quais descontos a escola oferece (pontualidade e segundo filho)?',
+                            officialQuote: 'Queremos apoiar a sua família! Oferecemos um desconto de pontualidade de 5% para pagamentos realizados até o dia 05. Se você tiver mais de um filho matriculado conosco, a mensalidade do irmãozinho ganha 10% de desconto.',
+                            details: '<p>• <strong>Desconto de Pontualidade:</strong> 5% de abatimento para pagamentos efetuados até o dia 05 (o valor fica em R$ 807,50).</p><p>• <strong>Desconto para Irmãos:</strong> 10% de desconto adicional na mensalidade do segundo filho matriculado.</p>'
+                        },
+                        {
+                            id: 3,
+                            category: 'livros',
+                            icon: 'fa-solid fa-book-open',
+                            question: 'Qual é o livro didático adotado e como comprar?',
+                            officialQuote: 'Olá, família! 📚 Trabalhamos com o sistema de ensino da Editora FTD (Coleção Farol). Os livros são comprados diretamente no site da editora usando o nosso cupom de desconto exclusivo, e você recebe tudo em casa. Se tiver qualquer dúvida na hora da compra, nossa secretaria está prontinha para te ajudar com o passo a passo!',
+                            details: '<p>• <strong>Coleção Adotada:</strong> Coleção Farol da Editora FTD.</p><p>• <strong>Onde comprar:</strong> Diretamente pelo portal online da FTD com entrega no seu endereço.</p><p>• <strong>Cupom:</strong> Utilize o cupom fornecido na secretaria para garantir a condição especial.</p>'
+                        },
+                        {
+                            id: 4,
+                            category: 'uniformes',
+                            icon: 'fa-solid fa-shirt',
+                            question: 'Qual é o valor e onde comprar o uniforme escolar?',
+                            officialQuote: 'Nosso uniforme foi pensado para ser super confortável e resistente para as crianças brincarem à vontade! O kit básico custa R$ 180,00 e é vendido diretamente pela loja parceira Uniformes & Cia. Temos peças mostruário na secretaria para você conferir os tamanhos.',
+                            details: '<p>• <strong>Kit Básico:</strong> R$ 180,00.</p><p>• <strong>Loja Parceira:</strong> Uniformes & Cia.</p><p>• <strong>Mostruário Físico:</strong> Disponível na recepção da escola para provar e escolher o tamanho certo do seu filho.</p>'
+                        },
+                        {
+                            id: 5,
+                            category: 'materiais',
+                            icon: 'fa-solid fa-boxes-packing',
+                            question: 'Como funciona a taxa de material escolar?',
+                            officialQuote: 'Pensando na sua praticidade, oferecemos duas opções: você pode pagar a taxa de material coletivo de R$ 350,00 (e nós cuidamos de toda a compra e organização), ou pode solicitar a lista completa na secretaria para comprar onde preferir.',
+                            details: '<p>• <strong>Opção 1 (Taxa Coletiva):</strong> R$ 350,00 - A escola realiza todas as compras e organiza os materiais dos alunos.</p><p>• <strong>Opção 2 (Lista Individual):</strong> A secretaria envia a lista em PDF para você comprar onde desejar.</p>'
+                        },
+                        {
+                            id: 6,
+                            category: 'pedagogico',
+                            icon: 'fa-solid fa-graduation-cap',
+                            question: 'Como consultar o planejamento pedagógico do meu filho?',
+                            officialQuote: 'Adoramos compartilhar o caminho de aprendizado dos nossos alunos! Você pode consultar o planejamento completo a qualquer momento pelo nosso Aplicativo/Portal do Aluno ou na nossa primeira Reunião de Pais. Se quiser antecipar, nossa coordenação pode te enviar a cópia em PDF.',
+                            details: '<p>• <strong>Aplicativo / Portal do Aluno:</strong> Disponível 24/7 para acesso dos responsáveis.</p><p>• <strong>Reunião de Pais:</strong> Apresentação na 1ª Reunião de Pais do ano letivo.</p><p>• <strong>Cópia em PDF:</strong> Solicite via WhatsApp com a coordenação.</p>'
+                        },
+                        {
+                            id: 7,
+                            category: 'visitas',
+                            icon: 'fa-solid fa-calendar-day',
+                            question: 'Quando posso fazer uma visita guiada para conhecer a estrutura?',
+                            officialQuote: 'Ficarei muito feliz em receber sua família! Adoramos apresentar nossos espaços e conversar sobre como acolhemos nossos alunos.',
+                            details: '<p>• <strong>Dias de Visitas:</strong> Terças e Quintas-feiras.</p><p>• <strong>Horários:</strong> Às 09:00h (Manhã) ou às 14:00h (Tarde).</p><p>• <strong>Agendamento:</strong> Realizado previamente pelo site ou WhatsApp para atendimento exclusivo.</p>'
+                        }
+                    ],
+
+                    // Chatbot Logic State
+                    chatOpen: false,
+                    chatInput: '',
+                    chatMessages: [
+                        {
+                            sender: 'bot',
+                            text: 'Olá, família! 🌸 Sou a **Rosita**, assistente virtual do Jardim Escola Cor de Rosa. Como posso te ajudar hoje com informações sobre mensalidades, livros FTD, uniformes ou visitas?',
+                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        }
+                    ],
+
+                    // Contact Modal Form
+                    contactModalOpen: false,
+                    contactSuccessMessage: '',
+                    contactForm: {
+                        name: '',
+                        phone: '',
+                        subject: 'Secretaria Geral',
+                        message: ''
+                    }
+                }
+            },
+            computed: {
+                filteredFaqs() {
+                    return this.faqs.filter(faq => {
+                        const matchesCategory = this.selectedCategoryFilter === 'all' || faq.category === this.selectedCategoryFilter;
+                        
+                        const query = this.searchQuery.toLowerCase().trim();
+                        const matchesQuery = !query || 
+                            faq.question.toLowerCase().includes(query) || 
+                            faq.officialQuote.toLowerCase().includes(query) ||
+                            faq.details.toLowerCase().includes(query);
+
+                        return matchesCategory && matchesQuery;
+                    });
+                },
+
+                // Calculator logic
+                calculatedFinalPrice() {
+                    let base = 850;
+                    let discountPunctuality = this.calcForm.payOnTime ? (base * 0.05) : 0;
+                    let discountSibling = this.calcForm.hasSibling ? (base * 0.10) : 0;
+                    let lateFine = !this.calcForm.payOnTime ? (base * 0.02) : 0;
+
+                    return Math.max(0, base - discountPunctuality - discountSibling + lateFine);
+                },
+
+                annualSavings() {
+                    let base = 850;
+                    let fullPriceAnnual = base * 12;
+                    let finalPriceAnnual = this.calculatedFinalPrice * 12;
+                    return Math.max(0, fullPriceAnnual - finalPriceAnnual);
+                }
+            },
+            methods: {
+                toggleFaq(id) {
+                    this.openFaqId = this.openFaqId === id ? null : id;
+                },
+
+                selectCategory(cat) {
+                    this.selectedCategoryFilter = cat;
+                    this.activeTab = 'faq';
+                },
+
+                copyCupom() {
+                    const cupomText = "COR-ROSA-FTD2026";
+                    const tempInput = document.createElement("input");
+                    tempInput.value = cupomText;
+                    document.body.appendChild(tempInput);
+                    tempInput.select();
+                    document.execCommand("copy");
+                    document.body.removeChild(tempInput);
+
+                    this.cupomCopied = true;
+                    setTimeout(() => {
+                        this.cupomCopied = false;
+                    }, 2500);
+                },
+
+                openContactModal(prefillQuestion = '') {
+                    if (prefillQuestion) {
+                        this.contactForm.message = `Dúvida: "${prefillQuestion}"`;
+                    }
+                    this.contactModalOpen = true;
+                },
+
+                submitContactForm() {
+                    this.contactSuccessMessage = "Sua mensagem foi registrada com sucesso! Nossa secretaria entrará em contato via WhatsApp em breve.";
+                    setTimeout(() => {
+                        this.contactSuccessMessage = '';
+                        this.contactModalOpen = false;
+                        this.contactForm.message = '';
+                    }, 3000);
+                },
+
+                submitVisitForm() {
+                    this.visitSuccessMessage = `Visita pré-agendada com sucesso para ${this.visitForm.day} às ${this.visitForm.time}! Confirmaremos os detalhes com você no WhatsApp (${this.visitForm.phone}).`;
+                    setTimeout(() => {
+                        this.visitSuccessMessage = '';
+                        this.visitForm.name = '';
+                        this.visitForm.phone = '';
+                        this.visitForm.notes = '';
+                    }, 4500);
+                },
+
+                // Chatbot handlers
+                sendQuickChat(text) {
+                    this.chatInput = text;
+                    this.handleChatSubmit();
+                },
+
+                handleChatSubmit() {
+                    if (!this.chatInput.trim()) return;
+
+                    const userText = this.chatInput;
+                    const now = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+
+                    this.chatMessages.push({
+                        sender: 'user',
+                        text: userText,
+                        time: now
+                    });
+
+                    this.chatInput = '';
+
+                    // Respond using official quotes from prints
+                    setTimeout(() => {
+                        let botReply = "Nossa secretaria está pronta para esclarecer qualquer detalhe! Você também pode nos enviar uma mensagem pelo botão do WhatsApp no topo do site.";
+
+                        const lower = userText.toLowerCase();
+
+                        if (lower.includes('mensalidade') || lower.includes('valor') || lower.includes('preço') || lower.includes('850')) {
+                            botReply = "Entendemos que o planejamento financeiro da família é fundamental! O investimento na Educação Infantil é de **R$ 850,00 mensais** no turno parcial, com vencimento todo **dia 05**. Esse valor cobre toda a nossa estrutura pedagógica e o cuidado diário com o seu filho.";
+                        } else if (lower.includes('desconto') || lower.includes('irmão') || lower.includes('pontualidade')) {
+                            botReply = "Queremos apoiar a sua família! Oferecemos um **desconto de pontualidade de 5%** para pagamentos realizados até o dia 05. Se você tiver mais de um filho matriculado conosco, a mensalidade do **irmãozinho ganha 10% de desconto**.";
+                        } else if (lower.includes('livro') || lower.includes('ftd') || lower.includes('farol')) {
+                            botReply = "Trabalhamos com o sistema de ensino da **Editora FTD (Coleção Farol)**. Os livros são comprados diretamente no site da editora usando o nosso cupom de desconto exclusivo, e você recebe tudo em casa!";
+                        } else if (lower.includes('material') || lower.includes('350')) {
+                            botReply = "Pensando na sua praticidade, oferecemos duas opções: você pode **pagar a taxa de material coletivo de R$ 350,00** (e nós cuidamos de toda a compra e organização), ou pode solicitar a lista completa na secretaria para comprar onde preferir.";
+                        } else if (lower.includes('uniforme') || lower.includes('180') || lower.includes('loja')) {
+                            botReply = "Nosso uniforme foi pensado para ser super confortável e resistente! O **kit básico custa R$ 180,00** e é vendido diretamente pela loja parceira **Uniformes & Cia**. Temos peças mostruário na secretaria para você conferir os tamanhos!";
+                        } else if (lower.includes('visita') || lower.includes('conhecer') || lower.includes('terça') || lower.includes('quinta')) {
+                            botReply = "Ficarei muito feliz em receber sua família! Realizamos **visitas agendadas às terças e quintas (às 9h ou 14h)** para te dar total atenção. Você pode agendar direto pela aba 'Agendar Visita'.";
+                        } else if (lower.includes('planejamento') || lower.includes('pdf') || lower.includes('reunião')) {
+                            botReply = "Você pode consultar o planejamento pedagógico pelo nosso **Aplicativo/Portal do Aluno** ou na nossa primeira **Reunião de Pais**. Se quiser antecipar, nossa coordenação pode te enviar a cópia em PDF!";
+                        }
+
+                        this.chatMessages.push({
+                            sender: 'bot',
+                            text: botReply,
+                            time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+                        });
+                    }, 400);
+                }
+            }
+        }).mount('#app');
+    </script>
+</body>
+</html>
